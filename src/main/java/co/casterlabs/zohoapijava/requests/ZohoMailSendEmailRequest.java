@@ -24,7 +24,7 @@ import okhttp3.Response;
 @Data
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = false)
-public class ZohoMailSendEmail extends AuthenticatedWebRequest<Void, ZohoAuth> {
+public class ZohoMailSendEmailRequest extends AuthenticatedWebRequest<Void, ZohoAuth> {
     private @NonNull String accountId;
     private @NonNull String fromAddress;
     private @NonNull String toAddress;
@@ -36,18 +36,18 @@ public class ZohoMailSendEmail extends AuthenticatedWebRequest<Void, ZohoAuth> {
     private @NonNull @Setter(AccessLevel.NONE) String content;
     private @NonNull @Setter(AccessLevel.NONE) String mailFormat;
 
-    public ZohoMailSendEmail(@NonNull ZohoAuth auth) {
+    public ZohoMailSendEmailRequest(@NonNull ZohoAuth auth) {
         super(auth);
     }
 
-    public ZohoMailSendEmail setContentsAsHtml(String html) {
+    public ZohoMailSendEmailRequest setContentsAsHtml(String html) {
         this.mailFormat = "html";
         this.content = html;
 
         return this;
     }
 
-    public ZohoMailSendEmail setContentsAsPlaintext(String text) {
+    public ZohoMailSendEmailRequest setContentsAsPlaintext(String text) {
         this.mailFormat = "plaintext";
         this.content = text;
 

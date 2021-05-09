@@ -13,17 +13,17 @@ import co.casterlabs.apiutil.web.AuthenticatedWebRequest;
 import co.casterlabs.zohoapijava.HttpUtil;
 import co.casterlabs.zohoapijava.ZohoApi;
 import co.casterlabs.zohoapijava.ZohoAuth;
-import co.casterlabs.zohoapijava.requests.ZohoMailGetUserAccountDetails.ZohoUserAccount;
+import co.casterlabs.zohoapijava.requests.ZohoMailGetUserAccountDetailsRequest.ZohoUserAccount;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 import okhttp3.Response;
 
-public class ZohoMailGetUserAccountDetails extends AuthenticatedWebRequest<List<ZohoUserAccount>, ZohoAuth> {
+public class ZohoMailGetUserAccountDetailsRequest extends AuthenticatedWebRequest<List<ZohoUserAccount>, ZohoAuth> {
     private static final Type LIST_TYPE = new TypeToken<List<ZohoUserAccount>>() {
     }.getType();
 
-    public ZohoMailGetUserAccountDetails(@NonNull ZohoAuth auth) {
+    public ZohoMailGetUserAccountDetailsRequest(@NonNull ZohoAuth auth) {
         super(auth);
     }
 

@@ -14,7 +14,7 @@ ZohoUserAccount account = new ZohoMailGetUserAccountDetails(auth)
 String accountId = account.getAccountId();
 String fromAddress = account.getPrimaryEmailAddress();
 
-new ZohoMailSendEmail(auth)
+new ZohoMailSendEmailRequest(auth)
     .setAccountId(accountId)
     .setContentsAsHtml("<!DOCTYPE html><html><span>Test message from <b>ZohoApiJava</b>!</span></html>")
     .setFromAddress(fromAddress)
