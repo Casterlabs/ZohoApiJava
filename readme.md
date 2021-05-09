@@ -7,7 +7,7 @@
 // Fill in these variables :^)
 ZohoAuth auth = new ZohoAuth(refreshToken, clientId, clientSecret, redirectUri, scope);
 
-ZohoUserAccount account = new ZohoMailGetUserAccountDetails(auth)
+ZohoUserAccount account = new ZohoMailGetUserAccountDetailsRequest(auth)
     .send()
     .get(0); // Get the first associated account, seems to work fine.
 
