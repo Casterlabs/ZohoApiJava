@@ -1,0 +1,15 @@
+# IntelliJ
+*.iml
+.idea/
+
+# Eclipse
+.settings/
+.project
+.classpath
+
+# Common
+target/
+*pom.xml.versionsBackup
+
+# Misc
+src/main/java/co/casterlabs/zohoapijava/Test.java
