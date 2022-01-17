@@ -4,13 +4,12 @@ import java.io.IOException;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.google.gson.JsonObject;
-
 import co.casterlabs.apiutil.auth.ApiAuthException;
 import co.casterlabs.apiutil.web.ApiException;
 import co.casterlabs.apiutil.web.AuthenticatedWebRequest;
-import co.casterlabs.zohoapijava.HttpUtil;
-import co.casterlabs.zohoapijava.ZohoApi;
+import co.casterlabs.rakurai.json.Rson;
+import co.casterlabs.rakurai.json.element.JsonObject;
+import co.casterlabs.zohoapijava.ZohoHttpUtil;
 import co.casterlabs.zohoapijava.ZohoAuth;
 import co.casterlabs.zohoapijava.ZohoUtil;
 import lombok.AccessLevel;
@@ -61,24 +60,24 @@ public class ZohoMailSendEmailRequest extends AuthenticatedWebRequest<Void, Zoho
 
             JsonObject body = new JsonObject();
 
-            body.addProperty("fromAddress", this.fromAddress);
-            body.addProperty("toAddress", this.toAddress);
+            body.put("fromAddress", this.fromAddress);
+            body.put("toAddress", this.toAddress);
 
-            body.addProperty("encoding", this.encoding);
-            body.addProperty("subject", this.subject);
-            body.addProperty("content", this.content);
-            body.addProperty("mailFormat", this.mailFormat);
+            body.put("encoding", this.encoding);
+            body.put("subject", this.subject);
+            body.put("content", this.content);
+            body.put("mailFormat", this.mailFormat);
 
             if (this.ccAddress != null) {
-                body.addProperty("ccAddress", this.ccAddress);
+                body.put("ccAddress", this.ccAddress);
             }
 
             if (this.bccAddress != null) {
-                body.addProperty("bccAddress", this.bccAddress);
+                body.put("bccAddress", this.bccAddress);
             }
 
-            try (Response response = HttpUtil.sendHttp(body.toString(), url, null, "application/json", this.auth)) {
-                JsonObject json = ZohoApi.GSON.fromJson(response.body().string(), JsonObject.class);
+            try (Response response = ZohoHttpUtil.sendHttp(body.toString(), url, null, "application/json", this.auth)) {
+                JsonObject json = Rson.DEFAULT.fromJson(response.body().string(), JsonObject.class);
 
                 if (response.isSuccessful()) {
                     return null;

@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>co.casterlabs</groupId>
 	<artifactId>ZohoApiJava</artifactId>
-	<version>1.0.0</version>
+	<version>1.1.0</version>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -62,7 +62,7 @@
 		<dependency>
 			<groupId>com.github.casterlabs</groupId>
 			<artifactId>ApiUtil</artifactId>
-			<version>12ea2ba</version> <!-- 1.2.0 -->
+			<version>1.4.0</version>
 			<scope>compile</scope>
 		</dependency>
 
@@ -72,11 +72,11 @@
 			<version>4.6.0</version>
 			<scope>compile</scope>
 		</dependency>
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<version>2.8.6</version>
-			<scope>compile</scope>
-		</dependency>
+        <dependency>
+            <groupId>com.github.casterlabs.rakurai</groupId>
+            <artifactId>Json</artifactId>
+            <version>1.12.0</version>
+            <scope>compile</scope>
+        </dependency>
 	</dependencies>
 </project>

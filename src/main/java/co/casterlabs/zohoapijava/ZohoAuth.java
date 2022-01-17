@@ -2,25 +2,24 @@ package co.casterlabs.zohoapijava;
 
 import java.io.IOException;
 
-import com.google.gson.JsonObject;
-
 import co.casterlabs.apiutil.auth.ApiAuthException;
 import co.casterlabs.apiutil.auth.AuthProvider;
+import co.casterlabs.rakurai.json.Rson;
+import co.casterlabs.rakurai.json.element.JsonObject;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
 import okhttp3.Request.Builder;
 import okhttp3.Response;
 
 @Getter
-public class ZohoAuth implements AuthProvider, AutoCloseable {
-    private @Setter boolean autoRefresh = true;
-
+public class ZohoAuth extends AuthProvider {
     private String refreshToken;
     private String clientId;
     private String clientSecret;
     private String redirectUri;
     private String scope;
+
+    private long expiresAt;
 
     private String accessToken;
 
@@ -51,31 +50,16 @@ public class ZohoAuth implements AuthProvider, AutoCloseable {
             this.scope
         );
 
-        try (Response response = HttpUtil.sendHttp("{}", url, null, null, null)) {
-            JsonObject json = ZohoApi.GSON.fromJson(response.body().string(), JsonObject.class);
+        try (Response response = ZohoHttpUtil.sendHttp("{}", url, null, null, null)) {
+            JsonObject json = Rson.DEFAULT.fromJson(response.body().string(), JsonObject.class);
 
-            if (json.has("error")) {
-                throw new ApiAuthException(json.get("error").getAsString());
+            if (json.containsKey("error")) {
+                throw new ApiAuthException(json.getString("error"));
             } else {
-                this.accessToken = json.get("access_token").getAsString();
+                long expiresIn = json.getNumber("expires_in").longValue() * 1000; // Secs -> Millis
 
-                long expiresInSeconds = json.get("expires_in").getAsLong();
-
-                if (this.autoRefresh) {
-                    ThreadHelper.executeAsyncLater(
-                        "ZohoAuth Token Refresh Thread",
-                        () -> {
-                            if (this.autoRefresh) {
-                                try {
-                                    this.refresh();
-                                } catch (ApiAuthException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        },
-                        expiresInSeconds * 1000 // Secs -> Millis
-                    );
-                }
+                this.accessToken = json.getString("access_token");
+                this.expiresAt = System.currentTimeMillis() + expiresIn;
             }
         } catch (IOException e) {
             throw new ApiAuthException(e);
@@ -83,13 +67,19 @@ public class ZohoAuth implements AuthProvider, AutoCloseable {
     }
 
     @Override
-    public void authenticateRequest(@NonNull Builder request) {
+    protected void authenticateRequest0(@NonNull Builder request) {
         request.header("Authorization", "Zoho-oauthtoken " + this.accessToken);
+
     }
 
     @Override
-    public void close() throws IOException {
-        this.autoRefresh = false;
+    public boolean isApplicationAuth() {
+        return false;
+    }
+
+    @Override
+    public boolean isExpired() {
+        return System.currentTimeMillis() > this.expiresAt;
     }
 
     public static ZohoAuth verifyOAuthCode(@NonNull String code, @NonNull String clientId, @NonNull String clientSecret, @NonNull String redirectUri, @NonNull String scope) throws ApiAuthException {
@@ -108,13 +98,13 @@ public class ZohoAuth implements AuthProvider, AutoCloseable {
             scope
         );
 
-        try (Response response = HttpUtil.sendHttp("{}", url, null, null, null)) {
-            JsonObject json = ZohoApi.GSON.fromJson(response.body().string(), JsonObject.class);
+        try (Response response = ZohoHttpUtil.sendHttp("{}", url, null, null, null)) {
+            JsonObject json = Rson.DEFAULT.fromJson(response.body().string(), JsonObject.class);
 
-            if (json.has("error")) {
-                throw new ApiAuthException(json.get("error").getAsString());
+            if (json.containsKey("error")) {
+                throw new ApiAuthException(json.getString("error"));
             } else {
-                String refreshToken = json.get("refresh_token").getAsString();
+                String refreshToken = json.getString("refresh_token");
 
                 return new ZohoAuth(refreshToken, clientId, clientSecret, redirectUri, scope);
             }
