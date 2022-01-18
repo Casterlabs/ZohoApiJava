@@ -30,16 +30,16 @@ public class ZohoUserAccount {
     private boolean enabled;
     private long mailboxCreationTime;
     private String incomingUserName;
-    private List<ZohoUserAccount.EmailAddress> emailAddress;
+    private List<ZohoEmailAddress> emailAddress;
     private String mailboxStatus;
     private String basicStorage;
     private String encryptedZuid;
     private String lastClient;
     private long allowedStorage;
     private long usedStorage;
-    private List<ZohoUserAccount.SendMailDetail> sendMailDetails;
+    private List<ZohoSendMailDetail> sendMailDetails;
     private float popFetchTime;
-    private ZohoUserAccount.Address address;
+    private ZohoAddress address;
     private long userExpiry;
     private boolean popAccessEnabled;
     private boolean spamcheckEnabled;
@@ -56,49 +56,5 @@ public class ZohoUserAccount {
     private boolean tfaEnabled;
     private String phoneNumer;
     private boolean status;
-
-    @Getter
-    @ToString
-    @JsonClass(exposeAll = true)
-    public static class EmailAddress {
-        private boolean isAlias;
-        private boolean isPrimary;
-        private String mailId;
-        private boolean isConfirmed;
-
-    }
-
-    @Getter
-    @ToString
-    @JsonClass(exposeAll = true)
-    public static class SendMailDetail {
-        private String sendMailId;
-        private String displayName;
-        private String serverName;
-        private String signatureId;
-        private int serverPort;
-        private String userName;
-        private String connectionType;
-        private String mode;
-        private boolean validated;
-        private String fromAddress;
-        private long smtpConnection;
-        private boolean validationRequired;
-        private long validationState;
-        private boolean status;
-
-    }
-
-    @Getter
-    @ToString
-    @JsonClass(exposeAll = true)
-    public static class Address {
-        private String country;
-        private String streetAddr;
-        private String city;
-        private String postalCode;
-        private String state;
-
-    }
 
 }
